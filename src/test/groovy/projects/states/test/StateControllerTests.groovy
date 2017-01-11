@@ -1,5 +1,6 @@
 import groovy.mock.interceptor.*
 
+@org.junit.Ignore
 class StateControllerTests extends GroovyTestCase {
 	
 	def stateController

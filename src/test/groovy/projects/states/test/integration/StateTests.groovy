@@ -1,3 +1,6 @@
+import org.junit.Ignore
+
+@Ignore
 class StateTests extends GroovyTestCase {
 
 	def state

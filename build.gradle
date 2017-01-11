@@ -2,6 +2,7 @@ buildscript {
     repositories {
         mavenLocal()
         maven { url "https://repo.grails.org/grails/core" }
+        maven { url "https://repo1.maven.org/maven2"}
     }
     dependencies {
         classpath "org.grails:grails-gradle-plugin:$grailsVersion"
@@ -9,7 +10,7 @@ buildscript {
     }
 }
 
-version "0.1"
+version "3.2.4.1"
 group "grails.code.coverage"
 
 apply plugin:"eclipse"
@@ -18,6 +19,7 @@ apply plugin:"org.grails.grails-plugin"
 apply plugin:"org.grails.grails-plugin-publish"
 apply plugin:"org.grails.grails-gsp"
 apply plugin:"asset-pipeline"
+apply plugin:"org.grails.grails-plugin-publish"
 
 repositories {
     mavenLocal()
@@ -50,6 +52,13 @@ dependencies {
     testCompile "org.grails.plugins:geb"
     testRuntime "org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1"
     testRuntime "net.sourceforge.htmlunit:htmlunit:2.18"
+
+    // Add From Existing Project
+    runtime'org.apache.ant:ant-launcher:1.10.0'
+    runtime 'org.apache.ant:ant:1.10.0'
+    runtime 'net.sourceforge.cobertura:cobertura:2.1.1'
+    runtime 'xalan:xalan:2.7.2'
+    runtime 'xerces:xercesImpl:2.11.0'
 }
 
 bootRun {
@@ -57,6 +66,13 @@ bootRun {
 }
 // enable if you wish to package this plugin as a standalone application
 bootRepackage.enabled = false
+
+
+ext {
+    grailsVersion = project.grailsVersion
+    gradleWrapperVersion = project.gradleWrapperVersion
+    artifactRepoBase = "https://nexus.spireon.com/nexus/content/repositories"
+}
 grailsPublish {
     // TODO: Provide values here
     user = 'user'
@@ -65,13 +81,27 @@ grailsPublish {
     license {
         name = 'Apache-2.0'
     }
-    title = "My Plugin"
-    desc = "Full plugin description"
+    title = "Grails Code Coverage Plugin"
+    desc = "Grails 3.2.4+ Code Coverage Plugin"
     developers = [johndoe:"John Doe"]
     portalUser = ""
-    portalPassword = ""    
+    portalPassword = ""
 }
 
+
+
+publishing {
+    repositories {
+        maven {
+            name "spireon"
+            url "${artifactRepoBase}/${project.version.endsWith('-SNAPSHOT') ? 'spireon-snapshot' : 'spireon-release'}"
+            credentials {
+                username nexusUsername
+                password nexusPassword
+            }
+        }
+    }
+}
 
 assets {
     packagePlugin = true
